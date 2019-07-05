@@ -80,6 +80,8 @@ cp $BAKERYDIR/templates/rsyslog.conf $IMAGEDIR/etc
 sed -r -i -e 's/#hdmi_force_hotplug=1/hdmi_force_hotplug=1/' \
 	  -e 's/#hdmi_drive=2/hdmi_drive=2/' \
 	  $IMAGEDIR/boot/config.txt
+sed -i '/# Uncomment some or all of these to enable the optional hardware interfaces/a dtoverlay=i2c1-bcm2708,sda1_pin=44,scl1_pin=45,pin_func=6' \
+	$IMAGEDIR/boot/config.txt
 
 # limit disk space occupied by logs
 ln -s ../cron.daily/logrotate $IMAGEDIR/etc/cron.hourly
@@ -179,8 +181,9 @@ sed -r -i -e '1d' $IMAGEDIR/etc/apt/apt.conf $IMAGEDIR/etc/apt/sources.list
 chroot $IMAGEDIR apt-get -y install `egrep -v '^#' $BAKERYDIR/debs-to-download`
 dpkg --root $IMAGEDIR --force-depends --purge rpd-wallpaper
 chroot $IMAGEDIR apt-get -y install revpi-wallpaper
+chroot $IMAGEDIR rm /etc/apt/sources.list.d/teamviewer-revpi.list
 chroot $IMAGEDIR apt-get update
-chroot $IMAGEDIR apt-get -y install teamviewer-revpi
+#chroot $IMAGEDIR apt-get -y install teamviewer-revpi
 chroot $IMAGEDIR apt-mark hold raspi-copies-and-fills
 chroot $IMAGEDIR apt-get -y upgrade
 chroot $IMAGEDIR apt-mark unhold raspi-copies-and-fills
