@@ -237,6 +237,9 @@ fi
 find $IMAGEDIR/var/log -type f -delete
 find $IMAGEDIR/etc/ssh -name "ssh_host_*_key*" -delete
 
+# update the firmware of wlan chip CYW43455
+sed -r -i -e "s/boardflags3=.*/boardflags3=0x44200100/" $IMAGEDIR/lib/firmware/brcm/brcmfmac43455-sdio.txt
+
 cleanup_umount
 
 fsck.vfat -a "$LOOPDEVICE"p1
