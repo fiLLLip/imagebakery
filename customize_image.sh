@@ -83,6 +83,13 @@ sed -r -i -e 's/#hdmi_force_hotplug=1/hdmi_force_hotplug=1/' \
 sed -i '/# Uncomment some or all of these to enable the optional hardware interfaces/a dtoverlay=i2c1-bcm2708,sda1_pin=44,scl1_pin=45,pin_func=6' \
 	$IMAGEDIR/boot/config.txt
 
+# feed the watchdog
+sed -r -i  '/exit 0/ i gpio blink 8 &' $IMAGEDIR/etc/rc.local
+
+#init the gpio mode for usb expander
+sed -r -i  '/exit 0/ i gpio mode 42 alt4' $IMAGEDIR/etc/rc.local
+sed -r -i  '/exit 0/ i gpio mode 43 out' $IMAGEDIR/etc/rc.local
+
 # limit disk space occupied by logs
 ln -s ../cron.daily/logrotate $IMAGEDIR/etc/cron.hourly
 sed -r -i -e 's/delaycompress/#delaycompress/' \
